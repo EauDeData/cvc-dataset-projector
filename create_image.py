@@ -4,7 +4,9 @@ from src.projectors.projectors import PCAProjector
 
 import cv2
 
-dataset = ZippedDataloader('/home/adri/Pictures/zipper.zip')
+# https://open.spotify.com/track/6xE6ZWzK1YDDSYzqOCoQlz?si=b377b2524525413b
+
+dataset = ZippedDataloader('example/windows.zip')
 model = Resnet(resnet='50')
 projector = PCAProjector(dataset, model, imsize = 30, mapsize = 300)
 
