@@ -1,6 +1,8 @@
 import torch
 import torchvision
 
+# https://open.spotify.com/track/5NSR9uH0YeDo67gMiEv13n?si=1885da5af0694dfd
+
 class Resnet(torch.nn.Module):
     def __init__(self, norm = 2, resnet = '152', pretrained = 'imagenet'):
         super(Resnet, self).__init__()
@@ -31,5 +33,3 @@ class Resnet(torch.nn.Module):
         h = self.resnet(batch)
         if self.norm is not None: h =  torch.nn.functional.normalize(h, p = self.norm, dim = 1)
         return h
-
-print(Resnet(resnet='18'))
