@@ -17,7 +17,10 @@ class Resnet(torch.nn.Module):
 
     def infer(self, image):
         # Single Numpy Array inference
-        pass
+        with torch.no_grad():
+
+            return self(torch.from_numpy(image.transpose(2, 0, 1)).float().unsqueeze(0)).cpu().squeeze().view(-1).numpy()
+        
 
     def __str__(self):
         return str(self.resnet)
@@ -27,6 +30,6 @@ class Resnet(torch.nn.Module):
 
         h = self.resnet(batch)
         if self.norm is not None: h =  torch.nn.functional.normalize(h, p = self.norm, dim = 1)
-        return 
+        return h
 
 print(Resnet(resnet='18'))

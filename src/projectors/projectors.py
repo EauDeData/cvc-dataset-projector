@@ -7,7 +7,7 @@ import cv2
 
 class BaseProjector:
     projector = None
-    def __init__(self, dataset, model, mapsize = 20000, imsize = 75, prevent_overlap = True) -> None:
+    def __init__(self, dataset, model, mapsize = 2000, imsize = 75, prevent_overlap = True) -> None:
         # TODO: Use prevent Overlap
 
         self.dataset = dataset # Should Be An Iterable Of Images
@@ -31,9 +31,10 @@ class BaseProjector:
 
         xs, ys = [a[0] for a in self.projected.values()], [a[1] for a in self.projected.values()] # TODO: Don't iterate twice lol
         min_emb_x, max_emb_x, min_emb_y, max_emb_y = min(xs), max(xs), min(ys), max(ys)
-        scale_coord = lambda var, min_, max_, scale: scale * (var - min_) / (max_ - min_)
+        scale_coord = lambda var, min_, max_, scale: int(scale * (var - min_) / (max_ - min_))
 
         for num, image in enumerate(self.dataset):
+            print(f'Drawing {num}...', end = '\r')
             # FIXME: Test X,Y coords system 
             resized = cv2.resize(image, (self.imsize, self.imsize)) 
             x, y = self.projected[num]
@@ -42,16 +43,17 @@ class BaseProjector:
             x_origin, y_origin = max(x_scaled - self.imsize, 0), max(y_scaled - self.imsize, 0)
             x_end, y_end = min(x_origin + self.imsize, self.mapsize - 1), min(y_origin + self.imsize, self.mapsize - 1)
 
-            self.background[x_origin:x_end, y_origin:y_end, :] = resized
+            round_error_x, round_error_y = self.imsize - (x_end - x_origin), self.imsize - (y_end - y_origin)
+            self.background[x_origin:x_end + round_error_x, y_origin:y_end + round_error_y, :] = resized
         
         return self.background
 
 class PCAProjector(BaseProjector):
     
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         self.projector = PCA(2)
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
 class TSNEProjector(BaseProjector):
     pass

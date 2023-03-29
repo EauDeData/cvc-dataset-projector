@@ -1,0 +1,49 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+  <head>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="leaflet.css" />
+    <script src="leaflet.js"></script>
+    <script src="leaflet-hash.js"></script>
+    <title>Zoomable Map</title>
+    <meta name="description" content="Explore Gigapixel image in a Google Maps like interface."/>
+    <style type="text/css">
+        .leaflet-container {
+            background: #000;
+            outline: 0;
+        }
+        .leaflet-container img { 
+          image-rendering: optimizeSpeed; 
+        } /* thanks chrismorgan */
+    </style>
+  </head>
+  <body style='background-color:#FFF;padding:0;margin:0;'>
+    <div id='map' style='height:100%;'></div>
+    <script>
+      var map = L.map('map', {
+          crs: L.CRS.Simple,
+          attributionControl: false
+      }).setView([-100,100], 3);
+
+
+      var hash = new L.Hash();
+      hash.init(map);
+
+      var layer_url = './tiles/{z}/{x}/{y}.png';
+
+      L.tileLayer(layer_url, {
+          maxZoom: 7,
+          noWrap: true,
+          subdomains: "12"
+      }).addTo(map);
+
+      var popup = L.popup();
+      function onMapClick(e) {
+            /// p = map.project(e.latlng, map.getZoom()).toString()
+
+      }
+      map.on('click', onMapClick);
+
+    </script>
+  </body>
+</html>
