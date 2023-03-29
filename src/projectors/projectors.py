@@ -3,6 +3,7 @@ import numpy as np
 import json
 from sklearn.decomposition import PCA
 import cv2
+from tqdm import tqdm
 
 
 class BaseProjector:
@@ -24,7 +25,10 @@ class BaseProjector:
 
     def fit_projector(self):
 
-        for num, image in enumerate(self.dataset): self.embeddings[num] = self.model.infer(image) # Make Sure We can Infer Stuff
+        print('Projecting images...')
+        for num, image in tqdm(enumerate(self.dataset)):
+
+            self.embeddings[num] = self.model.infer(image) # Make Sure We can Infer Stuff
         return {x: y for x, y in enumerate(self.projector.fit_transform(list(self.embeddings.values())))}
 
     def place_images(self):
