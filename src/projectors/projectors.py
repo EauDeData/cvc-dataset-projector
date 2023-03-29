@@ -50,8 +50,8 @@ class PCAProjector(BaseProjector):
     
 
     def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
         self.projector = PCA(2)
+        super().__init__(**kwargs)
 
 class TSNEProjector(BaseProjector):
     pass
