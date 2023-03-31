@@ -2,6 +2,8 @@ from PIL import Image
 import numpy as np
 import json
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
 import cv2
 from tqdm import tqdm
 
@@ -54,10 +56,14 @@ class BaseProjector:
 
 class PCAProjector(BaseProjector):
     
-
+    # I think this way of wrapping projectors is elegant
+    #   But honeslty we could just pass the constructor
     def __init__(self, *args, **kwargs) -> None:
         self.projector = PCA(2)
         super().__init__(*args, **kwargs)
 
 class TSNEProjector(BaseProjector):
-    pass
+    
+    def __init__(self, *args, **kwargs) -> None:
+        self.projector = TSNE(2)
+        super().__init__(*args, **kwargs)
