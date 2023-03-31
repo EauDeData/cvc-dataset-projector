@@ -8,7 +8,7 @@ import cv2
 
 dataset = ZippedDataloader('example/windows.zip',)
 model = Resnet(resnet='101')
-projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
+projector = PCAProjector(dataset, model, imsize = 128, mapsize = 20000)
 
 image = projector.place_images()
 cv2.imwrite('tmp.png', image)

@@ -64,6 +64,9 @@ class PCAProjector(BaseProjector):
 
 class TSNEProjector(BaseProjector):
     
+    # FIXME: For some reason I can't explain
+    #  TSNE has no compatible interface with PCA
+    #   So wrap it into a common interface where .fit_transform works as expected.
     def __init__(self, *args, **kwargs) -> None:
         self.projector = TSNE(2)
         super().__init__(*args, **kwargs)
