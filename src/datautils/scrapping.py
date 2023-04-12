@@ -37,7 +37,7 @@ def save_links():
     col = get_collections()
     whole_data = []
     for colection in tqdm(col): whole_data.extend(get_images_from_collection_tag(colection))
-    open(OUPATH, 'w').writelines(whole_data)
+    open(OUPATH, 'w').writelines('\n'.join(whole_data))
 
 
 if __name__ == '__main__': save_links()
