@@ -31,7 +31,7 @@ class BaseProjector:
         for num, image in tqdm(enumerate(self.dataset)):
 
             self.embeddings[num] = self.model.infer(image) # Make Sure We can Infer Stuff
-        return {x: y for x, y in enumerate(self.projector.fit_transform(list(self.embeddings.values())))}
+        return {x: y for x, y in enumerate(self.projector.fit_transform(np.array(list(self.embeddings.values()))))}
 
     def place_images(self):
 
@@ -64,9 +64,6 @@ class PCAProjector(BaseProjector):
 
 class TSNEProjector(BaseProjector):
     
-    # FIXME: For some reason I can't explain
-    #  TSNE has no compatible interface with PCA
-    #   So wrap it into a common interface where .fit_transform works as expected.
     def __init__(self, *args, **kwargs) -> None:
         self.projector = TSNE(2)
         super().__init__(*args, **kwargs)
