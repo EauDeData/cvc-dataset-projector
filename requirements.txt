@@ -1,7 +1,6 @@
 charset-normalizer==3.1.0
 cmake==3.26.1
 filelock==3.10.7
-GDAL==3.6.3
 idna==3.4
 Jinja2==3.1.2
 joblib==1.2.0
