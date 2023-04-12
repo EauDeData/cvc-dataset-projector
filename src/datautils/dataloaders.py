@@ -10,7 +10,13 @@ class ZippedDataloader:
         with zipfile.ZipFile(path_to_zip, 'r') as zip_ref:
             zip_ref.extractall(temporal_folder)
         
-        self.files = [os.path.join(temporal_folder, x) for x in os.listdir(temporal_folder)]
+        image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+
+        self.files = []
+        for root, _, files in os.walk(temporal_folder):
+            for file in files:
+                if os.path.splitext(file)[1].lower() in image_extensions:
+                    self.files.append(os.path.join(root, file))
         self.inner_state = 0
 
     def __len__(self):
