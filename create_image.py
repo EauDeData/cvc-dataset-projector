@@ -3,10 +3,21 @@ from src.vision.models import Resnet
 from src.projectors.projectors import PCAProjector, TSNEProjector
 
 import cv2
+import argparse
 
 # https://open.spotify.com/track/6xE6ZWzK1YDDSYzqOCoQlz?si=b377b2524525413b
 
-dataset = ZippedDataloader('example/windows.zip',)
+
+
+parser = argparse.ArgumentParser(
+                    prog='Lorem Ipsum',
+                    description='Super Trouper',
+                    epilog='Uwu')
+
+parser.add_argument('-f', '--file', default='example/windows.zip')      # option that takes a value
+args = parser.parse_args()
+
+dataset = ZippedDataloader(args.file,)
 model = Resnet(resnet='101')
 projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
 
