@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 # El rows = 1000 travieso és per aprofitar el bug
 BASE_ARXIU = 'https://catalegarxiumunicipal.bcn.cat'
 # QUERY_EIXAMPLE = BASE_ARXIU + '/ms-opac/mosaic?q=dreta+de+l%27eixample&start=0&rows=1000&sort=fecha%20asc&fq=norm&fv=*&fo=and&fq=norm&fv=*&fo=and&fq=msstored_doctype&fv=%22Fotogr%C3%A0fic%22&fo=and&fq=media&fv=*&fo=and'
-QUERY_GLOBAL = f"/ms-opac/search?q=*%3A*&start=0&rows={10 * 104797}&sort=msstored_typology+asc&norm=*&fq=msstored_doctype&fv=%22Fotogr%C3%A0fic%22&fo=and"
+QUERY_GLOBAL = BASE_ARXIU + f"/ms-opac/search?q=*%3A*&start=0&rows={10 * 104797}&sort=msstored_typology+asc&norm=*&fq=msstored_doctype&fv=%22Fotogr%C3%A0fic%22&fo=and"
 QUERY_EIXAMPLE = QUERY_GLOBAL # Workaround im lazy today
 
 DRIVERPATH = 'utilities/geckodriver'
