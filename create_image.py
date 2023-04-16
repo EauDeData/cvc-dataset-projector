@@ -1,10 +1,10 @@
 from src.datautils.dataloaders import ZippedDataloader
-from src.vision.models import Resnet
+from src.vision.models import Resnet, ResNetWithEmbedder
 from src.projectors.projectors import PCAProjector, TSNEProjector
 
 import cv2
 import argparse
-
+import torch
 # https://open.spotify.com/track/6xE6ZWzK1YDDSYzqOCoQlz?si=b377b2524525413b
 
 
@@ -20,8 +20,9 @@ parser.add_argument('-pm', '--pretrained_model', default=None)      # option tha
 args = parser.parse_args()
 
 dataset = ZippedDataloader(args.file,)
-model = Resnet(resnet='101')
-if not args.pretrained_model is None: model = model.load(args.pretrained_model)
+model = ResNetWithEmbedder(resnet='18', embed_size=256, pretrained=False)
+if not args.pretrained_model is None: model.load_state_dict(torch.load(args.pretrained_model))
+model.eval()
 projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
 
 image = projector.place_images()
