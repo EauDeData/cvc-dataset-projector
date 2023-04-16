@@ -15,10 +15,13 @@ parser = argparse.ArgumentParser(
                     epilog='Uwu')
 
 parser.add_argument('-f', '--file', default='example/windows.zip')      # option that takes a value
+parser.add_argument('-pm', '--pretrained_model', default=None)      # option that takes a value
+
 args = parser.parse_args()
 
 dataset = ZippedDataloader(args.file,)
 model = Resnet(resnet='101')
+if not args.pretrained_model is None: model = model.load(args.pretrained_model)
 projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
 
 image = projector.place_images()
