@@ -2,6 +2,8 @@ import torch
 import torchvision
 
 import numpy as np
+import clip
+from PIL import Image
 # https://open.spotify.com/track/5NSR9uH0YeDo67gMiEv13n?si=1885da5af0694dfd
 
 class Resnet(torch.nn.Module):
@@ -74,3 +76,26 @@ class ResNetWithEmbedder(torch.nn.Module):
         h = self.trunk(batch)
         h = self.embedder(h)
         return h
+    
+class CLIPLoader(torch.nn.Module):
+    name = 'CLIP_mapper'
+    def __init__(self, device = 'cuda', *args, **kwargs) -> None:
+        super(CLIPLoader, self).__init__()
+        self.device = device
+        self.model, self.preprocess = clip.load("ViT-B/32", device=device, jit = False)
+        self.model.to(device)
+
+    def _predict(self, text):
+        tokens = clip.tokenize(text).to(self.device)
+        return self.model.encode_text(tokens)
+
+    def _encode_image(self, img):
+        image = Image.fromarray(img)
+        img = self.preprocess(image).to(self.device).unsqueeze(0)
+
+        with torch.no_grad():
+            
+            return self.model.encode_image(img)
+    
+    def infer(self, img):
+        return self._encode_image(img).unsqueeze(0).cpu().squeeze().view(-1).numpy()

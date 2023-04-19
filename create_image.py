@@ -1,5 +1,5 @@
 from src.datautils.dataloaders import ZippedDataloader
-from src.vision.models import Resnet, ResNetWithEmbedder
+from src.vision.models import Resnet, ResNetWithEmbedder, CLIPLoader
 from src.projectors.projectors import PCAProjector, TSNEProjector
 
 import cv2
@@ -16,11 +16,16 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-f', '--file', default='example/windows.zip')      # option that takes a value
 parser.add_argument('-pm', '--pretrained_model', default=None)      # option that takes a value
+parser.add_argument('-m', '--model', default='clip')      # option that takes a value
+
 
 args = parser.parse_args()
 
 dataset = ZippedDataloader(args.file,)
-model = ResNetWithEmbedder(resnet='18', embed_size=256, pretrained=False)
+if args.model.lower() == 'resnet': model = Resnet(resnet='18', pretrained=False)
+elif args.model.lower() == 'clip': model = CLIPLoader()
+else: raise NotImplementedError
+
 if not args.pretrained_model is None: model.load_state_dict(torch.load(args.pretrained_model))
 model.eval()
 projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
