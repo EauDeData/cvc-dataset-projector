@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-f', '--file', default='example/windows.zip')      # option that takes a value
 parser.add_argument('-pm', '--pretrained_model', default=None)      # option that takes a value
 parser.add_argument('-m', '--model', default='clip')      # option that takes a value
-
+parser.add_argument('-s', '--imsize', default = 224)
 
 args = parser.parse_args()
 
@@ -28,7 +28,13 @@ else: raise NotImplementedError
 
 if not args.pretrained_model is None: model.load_state_dict(torch.load(args.pretrained_model))
 model.eval()
-projector = TSNEProjector(dataset, model, imsize = 128, mapsize = 20000)
+projector = TSNEProjector(dataset, model, imsize = args.imsize, mapsize = 20000)
 
+print(
+    "Using:\n",
+    f"\tProjector: {projector}",
+    f"\n\tModel: {model}"
+    f"\n\tData: {args.file}"
+)
 image = projector.place_images()
 cv2.imwrite('tmp.png', image)
