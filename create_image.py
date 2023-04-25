@@ -1,5 +1,5 @@
 from src.datautils.dataloaders import ZippedDataloader
-from src.vision.models import Resnet, ResNetWithEmbedder, CLIPLoader
+from src.vision.models import Resnet, ResNetWithEmbedder, CLIPLoader, CLIPTextEncoder, SymmetricSiameseModel
 from src.projectors.projectors import PCAProjector, TSNEProjector
 
 import cv2
@@ -21,13 +21,22 @@ parser.add_argument('-s', '--imsize', default = 224)
 
 args = parser.parse_args()
 
-dataset = ZippedDataloader(args.file,)
-if args.model.lower() == 'resnet': model = Resnet(resnet='18', pretrained=False)
+
+if args.model.lower() == 'resnet': model = ResNetWithEmbedder(resnet = "18", embed_size = 256)
 elif args.model.lower() == 'clip': model = CLIPLoader()
 else: raise NotImplementedError
+if not args.pretrained_model is None: 
 
-if not args.pretrained_model is None: model.load_state_dict(torch.load(args.pretrained_model))
-model.eval()
+
+    #modelmerda = SymmetricSiameseModel(model, CLIPTextEncoder(256), args)
+    checkpoint = torch.load(args.pretrained_model)
+    model.load_state_dict(checkpoint)
+    #model = modelmerda.image_encoder
+
+
+
+model.eval().cuda()
+dataset = ZippedDataloader(args.file,)
 projector = TSNEProjector(dataset, model, imsize = args.imsize, mapsize = 20000)
 
 print(
