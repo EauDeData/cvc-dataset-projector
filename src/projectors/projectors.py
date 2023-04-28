@@ -6,7 +6,7 @@ from sklearn.manifold import TSNE
 
 import cv2
 from tqdm import tqdm
-
+import torch
 
 class BaseProjector:
     projector = None
@@ -29,8 +29,10 @@ class BaseProjector:
 
         print('Projecting images...')
         for num, image in tqdm(enumerate(self.dataset)):
+            with torch.no_grad():
+                self.embeddings[num] = self.model.infer(image) # Make Sure We can Infer Stuff
+                del image
 
-            self.embeddings[num] = self.model.infer(image) # Make Sure We can Infer Stuff
         return {x: y for x, y in enumerate(self.projector.fit_transform(np.array(list(self.embeddings.values()))))}
 
     def place_images(self):
