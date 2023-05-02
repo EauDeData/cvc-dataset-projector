@@ -18,6 +18,7 @@ class ZippedDataloader:
                 if os.path.splitext(file)[1].lower() in image_extensions:
                     self.files.append(os.path.join(root, file))
         self.inner_state = 0
+        self.files.sort()
 
     def __len__(self):
         return len(self.files)
