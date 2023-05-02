@@ -1,5 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
+  <link rel="stylesheet" type="text/css" href="style.css">
 
 <script>
   function query_by_string(inputText) {
@@ -22,6 +23,57 @@
 
     
   }
+
+  function change_tab(idtab) {
+      const tabs = document.querySelectorAll('#tabs ul li a');
+      const tabContent = document.querySelectorAll('#tabs div');
+
+      tabs.forEach((tab) => {
+        tab.classList.remove('active');
+      });
+
+      tabContent.forEach((tab) => {
+        tab.classList.remove('active');
+      });
+
+      const tab = document.getElementById(idtab);
+
+      tab.classList.add('active');
+      document.querySelector(tab.getAttribute('href')).classList.add('active');
+    }
+
+    function fetch_service(file, service){
+
+      img = document.getElementById('output-img')
+      img.src = URL.createObjectURL(file);
+      
+      document.getElementById("results").innerHTML = '<h2>Carregant...</h2>';
+
+      var formData = new FormData();
+      formData.append('file', file);
+
+      var requestOptions = {
+          method: 'POST',
+          body: formData,
+          redirect: 'follow'
+      };
+
+      if (service == "date"){
+        endpoint = "http://158.109.8.44:8080/date/"
+      }
+      if (service == "caption"){
+        endpoint = "http://158.109.8.44:8080/caption/"
+      }
+
+      fetch(endpoint, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          document.getElementById('results').innerHTML = "<h3>" + JSON.stringify(result.result) + "</h3>";
+
+        })
+
+
+    }
   </script>
 
 <head></head>
@@ -29,11 +81,40 @@
 
   <div style="display: flex; justify-content: center; margin-top: 250px;">
     <div style="width: 50%;">
-      <form onsubmit="query_by_string(document.getElementById('query').value); return false;">
-        <label for="query">Enter some text:</label>
-        <input type="text" id="query" name="query" required>
-        <button type="submit">Submit</button>
-      </form>
+
+
+      <div id="tabs">
+        <ul>
+          <ul>
+            <li><a href="#tab-text2image" onclick="change_tab('tab-text2image')">Text2Image</a></li>
+            <li><a href="#tab-image2text" onclick="change_tab('tab-image2text')">Image2Text</a></li>
+            <li><a href="#tab-date-estimation" onclick="change_tab('tab-date-estimation')">Date Estimation</a></li>
+          </ul>
+        </ul>
+        <div id="tab-text2image">
+          <!-- Your form goes here -->
+          
+            <form onsubmit="query_by_string(document.getElementById('query').value); return false;">
+              <label for="query">Enter some text:</label>
+              <input type="text" id="query" name="query" required>
+              <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div id="tab-image2text">
+         
+          <form method='POST' enctype='multipart/form-data'>
+              <label for="file">Escull un fitxer...</label>
+              <input id="file" type="file" name="file" onchange="fetch_service(this.files[0], 'caption')">
+          </form>
+          
+        </div>
+        <div id="tab-date-estimation">
+          <form method='POST' enctype='multipart/form-data'>
+            <label for="file">Escull un fitxer...</label>
+            <input id="file" type="file" name="file" onchange="fetch_service(this.files[0], 'date')">
+        </form>
+        </div>
+      </div>
     
 
     </div>
@@ -46,9 +127,10 @@
   
   </div>
 
-
+  <img style = "height: 512px; width: auto; margin-left: 50%;" id = 'output-img'>
   <div id = "results">
 
+    
 
   </div>
 

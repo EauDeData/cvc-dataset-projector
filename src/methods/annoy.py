@@ -35,7 +35,7 @@ class Annoyer:
             raise AssertionError('Cannot fit a built Annoy')
         else:
             self.state_variables['built'] = True
-
+        
         for idx, image in enumerate(self.dataloader):
             print(
                 f'Building KNN... {idx} / {len(self.dataloader)}\t', end='\r')

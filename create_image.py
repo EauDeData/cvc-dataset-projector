@@ -7,6 +7,7 @@ import cv2
 import argparse
 import torch
 import pickle
+import numpy as np
 # https://open.spotify.com/track/6xE6ZWzK1YDDSYzqOCoQlz?si=b377b2524525413b
 
 
@@ -52,5 +53,5 @@ print(
     f"\n\tModel: {model}"
     f"\n\tData: {args.file}"
 )
-image = projector.place_images()
+image = cv2.cvtColor(projector.place_images().astype(np.uint8), cv2.COLOR_RGB2BGR)
 cv2.imwrite('tmp.png', image)

@@ -8,6 +8,7 @@ import clip
 import annoy 
 import dill 
 import torch
+import urllib.parse
 
 warnings.warn("Example server. Security non guaranteed in any case!")
 
@@ -57,6 +58,6 @@ def map_index():
 
 @api.route('/<path:path>/<filename>',)
 def get_image(path, filename):
-    return send_file(os.path.join(path, filename))
+    return send_file(urllib.parse.quote(os.path.join(path, filename)))
 
 api.run(host=config["IP"], port=int(config["PORT"]))
