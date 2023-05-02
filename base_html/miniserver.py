@@ -1,41 +1,62 @@
 from typing import *
-from flask import Flask, request, Response, redirect, send_file
+from flask import Flask, request, Response, redirect, send_from_directory, render_template, send_file
 import requests
 import os
-import pickle
 import json
 import warnings
 import clip 
 import annoy 
+import dill 
+import torch
 
 warnings.warn("Example server. Security non guaranteed in any case!")
 
 from pytools.models import CLIPLoader
 
 image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp']
-api = Flask(__name__)
-clip = CLIPLoader()
+api = Flask(__name__, root_path = "web/", template_folder = "./")
+clipmodel = CLIPLoader()
 
 config = json.load(open('config.json', 'r'))
-dataset = pickle.load(open(config['dataset'], 'rb'))
+dataset = dill.load(open(config['dataset'], 'rb'))
 annoyer = annoy.AnnoyIndex(512, 'angular')
 annoyer.load(config['annoy'])
 
-@api.route('/text-query/<query>',  methods=['POST'])
+@api.route("/<whatever>.css")
+def css(whatever):
+    return send_file(whatever + '.css')
+
+@api.route("/<whatever>.js")
+def js(whatever):
+    return send_file(whatever + '.js')
+
+@api.route("/tiles/<path:numbers>/<file>.png")
+def tiles(numbers, file):
+    return send_file(os.path.join("tiles", numbers, file + ".png"))
+
+@api.route('/query/<query>')
 def get_images_path_by_text_query(query):
     
-    encoded_query = clip.tokenize([query])[0].numpy()
-    idxs = annoyer.retrieve_by_vector(encoded_query)
-    files = [annoyer.datase.files[idx] for idx in idxs]
+    with torch.no_grad():
+        encoded_query = clipmodel.model.encode_text(clip.tokenize([query]).cuda())[0].cpu().numpy()
+        idxs = annoyer.get_nns_by_vector(encoded_query, n = 10)
+        files = [dataset[idx] for idx in idxs]
+        jsoned = json.dumps({
+            "images": files
+        })
+    print(jsoned)
+    return jsoned
 
-    return json.dumps({
-        "images": files
-    })
+@api.route("/")
+def index():
+    return render_template("index.html")
 
-@api.route(f'/<path>/<filename:re:[\w]+\.({"|".join(image_extensions)})>',)
+@api.route("/map.html")
+def map_index():
+    return render_template("map.html")
+
+@api.route('/<path:path>/<filename>',)
 def get_image(path, filename):
-    return send_file(os.path.join(path, filename), mimetype='image/gif')
-
-
+    return send_file(os.path.join(path, filename))
 
 api.run(host=config["IP"], port=int(config["PORT"]))

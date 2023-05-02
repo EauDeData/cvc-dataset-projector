@@ -40,7 +40,6 @@ dataset = ZippedDataloader(args.file,)
 
 
 annoyer = Annoyer(CLIPLoader().cuda(), dataset, 512)
-pickle.dump(dataset, open('index.pkl', 'wb'))
 
 annoyer.fit()
 

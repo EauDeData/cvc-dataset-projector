@@ -1,16 +1,56 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
 
+<script>
+  function query_by_string(inputText) {
+    // Do something with the input text
+    document.getElementById('results').innerHTML = '';
+
+      fetch(`/query/${inputText}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      const images = data.images;
+      const resultsDiv = document.getElementById('results');
+      images.forEach(imagePath => {
+        const img = document.createElement('img');
+        img.src = imagePath;
+        resultsDiv.appendChild(img);
+      });
+    })
+    .catch(error => console.error('Error retrieving images:', error));
+
+    
+  }
+  </script>
+
 <head></head>
-<body></body>
+<body>
 
-<div>
+  <div style="display: flex; justify-content: center; margin-top: 250px;">
+    <div style="width: 50%;">
+      <form onsubmit="query_by_string(document.getElementById('query').value); return false;">
+        <label for="query">Enter some text:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Submit</button>
+      </form>
+    
 
-    <div class="container">
+    </div>
+  
+    <div style="width: 50%;">
+      <div class="container">
         <iframe src="./map.html"></iframe>
       </div>
-      
-</div>
+    </div>
+  
+  </div>
 
 
+  <div id = "results">
+
+
+  </div>
+
+</body>
 </html>

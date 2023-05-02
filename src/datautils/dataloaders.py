@@ -1,5 +1,7 @@
 import os
 import cv2
+import pickle
+import dill
 
 import zipfile
 
@@ -19,6 +21,8 @@ class ZippedDataloader:
                     self.files.append(os.path.join(root, file))
         self.inner_state = 0
         self.files.sort()
+        dill.dump(self.files, open('index.pkl', 'wb'))
+
 
     def __len__(self):
         return len(self.files)
