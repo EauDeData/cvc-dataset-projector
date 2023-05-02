@@ -1,0 +1,6 @@
+{
+    "IP": "localhost",
+    "PORT": "5005",
+    "dataset": "index.pkl",
+    "annoy": "index.ann"
+}

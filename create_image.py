@@ -1,10 +1,12 @@
 from src.datautils.dataloaders import ZippedDataloader
-from src.vision.models import Resnet, ResNetWithEmbedder, CLIPLoader, CLIPTextEncoder, SymmetricSiameseModel
+from src.vision.models import Resnet, ResNetWithEmbedder, CLIPLoader
 from src.projectors.projectors import PCAProjector, TSNEProjector
+from src.methods.annoy import Annoyer
 
 import cv2
 import argparse
 import torch
+import pickle
 # https://open.spotify.com/track/6xE6ZWzK1YDDSYzqOCoQlz?si=b377b2524525413b
 
 
@@ -28,16 +30,22 @@ else: raise NotImplementedError
 if not args.pretrained_model is None: 
 
 
-    #modelmerda = SymmetricSiameseModel(model, CLIPTextEncoder(256), args)
     checkpoint = torch.load(args.pretrained_model)
     model.load_state_dict(checkpoint)
-    #model = modelmerda.image_encoder
 
 
 
 model.eval().cuda()
 dataset = ZippedDataloader(args.file,)
+
+
+annoyer = Annoyer(CLIPLoader().cuda(), dataset, 512)
+pickle.dump(dataset, open('index.pkl', 'wb'))
+
+annoyer.fit()
+
 projector = TSNEProjector(dataset, model, imsize = args.imsize, mapsize = 20000)
+
 
 print(
     "Using:\n",
