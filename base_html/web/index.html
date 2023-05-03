@@ -59,10 +59,10 @@
       };
 
       if (service == "date"){
-        endpoint = "http://158.109.8.44:8080/date/"
+        endpoint = "http://158.109.8.44:8080/service/date/"
       }
       if (service == "caption"){
-        endpoint = "http://158.109.8.44:8080/caption/"
+        endpoint = "http://158.109.8.44:8080/service/caption/"
       }
 
       fetch(endpoint, requestOptions)
@@ -77,62 +77,50 @@
   </script>
 
 <head></head>
-<body>
-
-  <div style="display: flex; justify-content: center; margin-top: 250px;">
-    <div style="width: 50%;">
-
-
-      <div id="tabs">
-        <ul>
+  <body onload="change_tab('tab-text2image')">
+    <div style="display: flex; justify-content: center; margin-top: 50px;">
+      <div style="width: 30%;">
+        <div id="tabs">
           <ul>
             <li><a href="#tab-text2image" onclick="change_tab('tab-text2image')">Text2Image</a></li>
             <li><a href="#tab-image2text" onclick="change_tab('tab-image2text')">Image2Text</a></li>
             <li><a href="#tab-date-estimation" onclick="change_tab('tab-date-estimation')">Date Estimation</a></li>
           </ul>
-        </ul>
-        <div id="tab-text2image">
-          <!-- Your form goes here -->
-          
+          <div id="tab-text2image">
             <form onsubmit="query_by_string(document.getElementById('query').value); return false;">
               <label for="query">Enter some text:</label>
               <input type="text" id="query" name="query" required>
               <button type="submit">Submit</button>
             </form>
-        </div>
-        <div id="tab-image2text">
-         
-          <form method='POST' enctype='multipart/form-data'>
-              <label for="file">Escull un fitxer...</label>
+          </div>
+          <div id="tab-image2text">
+            <form method="POST" enctype="multipart/form-data">
+              <label for="file">Upload an image:</label>
               <input id="file" type="file" name="file" onchange="fetch_service(this.files[0], 'caption')">
-          </form>
-          
-        </div>
-        <div id="tab-date-estimation">
-          <form method='POST' enctype='multipart/form-data'>
-            <label for="file">Escull un fitxer...</label>
-            <input id="file" type="file" name="file" onchange="fetch_service(this.files[0], 'date')">
-        </form>
+            </form>
+          </div>
+          <div id="tab-date-estimation">
+            <form method="POST" enctype="multipart/form-data">
+              <label for="file">Upload an image:</label>
+              <input id="file" type="file" name="file" onchange="fetch_service(this.files[0], 'date')">
+            </form>
+          </div>
         </div>
       </div>
-    
-
-    </div>
-  
-    <div style="width: 50%;">
-      <div class="container">
-        <iframe src="./map.html"></iframe>
+      <div style="width: 70%;">
+        <div class="container">
+          <iframe src="./map.html"></iframe>
+        </div>
       </div>
     </div>
-  
-  </div>
 
-  <img style = "height: 512px; width: auto; margin-left: 50%;" id = 'output-img'>
-  <div id = "results">
+    <div style="display: flex; justify-content: center; margin-top: 50px;">
+      <div id="results"></div>
+    </div>
 
-    
-
-  </div>
-
-</body>
+    <div style="display: flex; justify-content: center; margin-top: 50px;">
+      <img style="max-width: 100%; max-height: 256px;" id="output-img">
+    </div>
+  </body>
+  </html>
 </html>
