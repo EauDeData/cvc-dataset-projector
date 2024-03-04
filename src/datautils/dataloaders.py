@@ -30,11 +30,11 @@ class ZippedDataloader:
             fname = f"{idx:09d}.{extension}" # TODO: More elegant way
             subpath[-1] = fname
             newpath = os.path.join(*subpath)
+            os.rename(path, newpath)
 
             try:
                 if cv2.imread(newpath, cv2.IMREAD_COLOR) is None: raise FileNotFoundError
                 self_files.append(newpath)
-                os.rename(path, newpath)
             except:
                 continue
 
