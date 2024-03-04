@@ -22,6 +22,7 @@ class ZippedDataloader:
         self.inner_state = 0
         self.files.sort()
 
+        self_files = []
         for idx, path in enumerate(self.files):
             
             subpath = path.split('/')
@@ -30,9 +31,14 @@ class ZippedDataloader:
             subpath[-1] = fname
             newpath = os.path.join(*subpath)
 
-            self.files[idx] = newpath
-            os.rename(path, newpath)
-        
+            try:
+                if cv2.imread(newpath, cv2.IMREAD_COLOR) is None: raise FileNotFoundError
+                self_files.append(newpath)
+                os.rename(path, newpath)
+            except:
+                continue
+
+        self.files = self_files
         dill.dump(self.files, open('index.pkl', 'wb'))
 
 
