@@ -44,7 +44,7 @@ annoyer = Annoyer(CLIPLoader().cuda(), dataset, 512)
 
 annoyer.fit()
 
-projector = TSNEProjector(dataset, model, imsize = args.imsize, mapsize = 20000)
+projector = TSNEProjector(dataset, model, imsize = args.imsize, mapsize = 80000)
 
 
 print(
