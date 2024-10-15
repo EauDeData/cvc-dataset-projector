@@ -11,7 +11,7 @@ class Annoyer:
     # High performance approaximate nearest neighbors - agnostic wrapper
     # Find implementation and documentation on https://github.com/spotify/annoy
 
-    def __init__(self, model, dataset, emb_size=None, distance='angular', experiment_name='resnet_base', out_dir='output/', device='cuda') -> None:
+    def __init__(self, model, dataset, emb_size=None, distance='angular', experiment_name='resnet_base', out_dir='/data3fast/users/amolina/output/', device='cuda') -> None:
         assert not (emb_size is None) and isinstance(emb_size, int),\
             f'When using Annoyer KNN emb_size must be an int. Set as None for common interface. Found: {type(emb_size)}'
 

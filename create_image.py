@@ -54,4 +54,4 @@ print(
     f"\n\tData: {args.file}"
 )
 image = cv2.cvtColor(projector.place_images().astype(np.uint8), cv2.COLOR_RGB2BGR)
-cv2.imwrite('tmp.png', image)
+cv2.imwrite('/data3fast/users/amolina/tmp.png', image)
